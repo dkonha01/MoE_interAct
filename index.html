@@ -42,43 +42,34 @@
 <div id="messageError"></div>
 <div id="messageArea" style="position: relative; left: 0px; top: 70px;">wave your hand in front of webcam!</div>
 
+<script src="js/RequestAnimationFrame.js"></script>
+		
+<div id="info">
+<a href="http://threejs.org" target="_blank"></a><a href="http://durian.blender.org/" target="_blank"></a>
+</div>
+		
+<script src="build/three.min.js"></script>
+<script src="js/shaders/ConvolutionShader.js"></script>
+<script src="js/shaders/DotScreenShader.js"></script>
+<script src="js/shaders/CopyShader.js"></script>
+<script src="js/shaders/FresnelShader.js"></script>
+<script src="js/shaders/RGBShiftShader.js"></script>
+<script src="js/postprocessing/EffectComposer.js"></script>
+<script src="js/postprocessing/FilmPass.js"></script>
+<script src="js/postprocessing/RenderPass.js"></script>
+<script src="js/postprocessing/MaskPass.js"></script>
+<script src="js/postprocessing/BloomPass.js"></script>
+<script src="js/postprocessing/ShaderPass.js"></script>
+<script src="js/postprocessing/DotScreenPass.js"></script>
+<script src="js/howler.core.js"></script>
+<script src="js/Detector.js"></script>
 
-<script src="js/RequestAnimationFrame.js">
-
-</script>
-
-		<div id="info">
-			<a href="http://threejs.org" target="_blank"></a><a href="http://durian.blender.org/" target="_blank"></a>
-		</div>
-
-		<script src="build/three.min.js"></script>
-
-		<script src="js/shaders/ConvolutionShader.js"></script>
-		<script src="js/shaders/DotScreenShader.js"></script>
-		<script src="js/shaders/CopyShader.js"></script>
-		<script src="js/shaders/FresnelShader.js"></script>
-        <script src="js/shaders/RGBShiftShader.js"></script>
-		<script src="js/postprocessing/EffectComposer.js"></script>
-		<script src="js/postprocessing/FilmPass.js"></script>
-		<script src="js/postprocessing/RenderPass.js"></script>
-		<script src="js/postprocessing/MaskPass.js"></script>
-		<script src="js/postprocessing/BloomPass.js"></script>
-		<script src="js/postprocessing/ShaderPass.js"></script>
-		<script src="js/postprocessing/DotScreenPass.js"></script>
-
-
-		<script src="js/howler.core.js"></script>
-
-		<script src="js/Detector.js"></script>
-
-		<video id="movie" autoplay loop style="display:none">
-			<source src="textures/MoE.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' crossOrigin="anonymous";>
-
-		</video>
-
-
-
-		<script>
+<video id="movie" autoplay loop style="display:none">
+<source src="textures/MoE.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' crossOrigin="anonymous";>
+</video>
+		
+<script>
+			
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 window.URL = window.URL || window.webkitURL;
 
@@ -118,7 +109,6 @@ function noStream(e)
 var sound1 = new Howl({
   src: ["audio/32a_fwd_rev.wav"]
 });
-
 
 
 sound1.play();
