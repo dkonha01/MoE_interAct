@@ -356,24 +356,18 @@ buttons.push( buttonData3 );
 
 				mouseX = ( event.clientX - windowHalfX );
 				mouseY = ( event.clientY - windowHalfY ) * 0.3;
-
 			}
-
 
 			function animate() {
 
 				requestAnimationFrame( animate );
-
 				render();
 				blend();
 				checkAreas();
 
 			}
 
-
 			var h, counter = 1;
-
-
 			function render() {
 
 				if ( video.readyState === video.HAVE_ENOUGH_DATA )
@@ -389,7 +383,6 @@ buttons.push( buttonData3 );
 				renderer.clear();
 				//composer.render();
 		}
-
 
 var lastImageData;
 
@@ -460,19 +453,11 @@ function checkAreas()
 		if (average > 93) // more than 20% movement detected
 		{
            composer.render();
-
            sound1.loop(true);
-
            sound1.mute(false);
            sound1.fade(.87, 0, 678);
 
-
-
-			//console.log( "Button " + buttons[b].name + " triggered." ); // do stuff
-			//messageArea.innerHTML = "<font size='+16' color=" + buttons[b].name + "><b>Button " + buttons[b].name + " triggered.</b></font>";
-
-		}
-
+	}
     }
 }
 
