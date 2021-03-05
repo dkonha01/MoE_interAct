@@ -30,9 +30,9 @@
 
 		</style>
 	</head>
-	<body>
+<body>
 
-	<video id="monitor" autoplay style="display: none; width: 640px; height: 480px;"></video>
+<video id="monitor" autoplay style="display: none; width: 640px; height: 480px;"></video>
 
 <div id="canvasLayers"  width="640" height="480"  style="position: absolute; left: 0px; top: 0px;">
 <canvas id="videoCanvas" width="640" height="480" style="z-index: 1; position: absolute; left:400px; top:0px;opacity:0.007;"></canvas>
@@ -102,9 +102,6 @@ function noStream(e)
 	{   msg = 'User denied access to use camera.';   }
 	document.getElementById('errorMessage').textContent = msg;
 }
-</script>
-
-<script>
 
 var sound1 = new Howl({
   src: ["audio/32a_fwd_rev.wav"]
@@ -152,48 +149,37 @@ button3.src ="images/SquareBlue.png";
 var buttonData3 = { name:"blue", image:button3, x:320 - 32 - 10, y:40, w:32, h:32 };
 buttons.push( buttonData3 );
 
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+var container;
+var camera, scene, renderer;
+var MoE, texture, material, mesh;
+var composer;
+var mouseX = 0;
+var mouseY = 0;
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
 
-			var container;
-			var camera, scene, renderer;
-			var MoE, texture, material, mesh;
+var cube_count,
+meshes = [],
+materials = [],
+xgrid = 80,
+ygrid = 80;
 
-			var composer;
 
-			var mouseX = 0;
-			var mouseY = 0;
+init();
+animate();
+	
+function init() {
 
-			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;
-
-			var cube_count,
-
-				meshes = [],
-				materials = [],
-
-				xgrid = 80,
-				ygrid = 80;
-
-				//	xgrid = 20,
-				// ygrid = 10;
-
-			init();
-			animate();
-
-			function init() {
-
-				container = document.createElement( 'div' );
-				document.body.appendChild( container );
-
-				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.z = 500;
-
-				scene = new THREE.Scene();
-
-				var light = new THREE.DirectionalLight( 0xffffff );
-				light.position.set( 0.5, 1, 1 ).normalize();
-				scene.add( light );
+container = document.createElement( 'div' );
+document.body.appendChild( container );
+camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.z = 500;
+scene = new THREE.Scene();
+var light = new THREE.DirectionalLight( 0xffffff );
+light.position.set( 0.5, 1, 1 ).normalize();
+scene.add( light );
 
 				renderer = new THREE.WebGLRenderer( { antialias: false } );
 				renderer.setPixelRatio( window.devicePixelRatio );
