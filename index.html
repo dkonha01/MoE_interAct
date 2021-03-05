@@ -218,21 +218,9 @@ scene.add( light );
 
 					ox = i;
 					oy = j;
-
-					///////////////////////////////////////////////
-
 					geometry = new THREE.BoxGeometry( xsize, ysize, xsize );
-
 					change_uvs( geometry, ux, uy, ox, oy );
-
-
-
 					materials[ cube_count ] = new THREE.MeshLambertMaterial( parameters );
-
-
-					////////////////////////////////////////////////////////////////////////
-
-
 					material = materials[ cube_count ];
 
 					material.hue = i/xgrid;
@@ -248,59 +236,34 @@ scene.add( light );
 					mesh.position.x =   ( i - xgrid/2 ) * xsize;
 					mesh.position.y =   ( j - ygrid/2 ) * ysize;
 					mesh.position.z = 0;
-
 					mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
-
 					scene.add( mesh );
 
 				}
 
 				renderer.autoClear = false;
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				// postprocessing
 
-
-
 				var renderModel = new THREE.RenderPass( scene, camera );
-
 				var rgbEffect = new THREE.ShaderPass( THREE.RGBShiftShader );
                 rgbEffect.uniforms[ 'amount' ].value = 0.0183;
 
-
 				var effectBloom = new THREE.BloomPass( 2.3 );
-
 				var dotScreen = new THREE.DotScreenPass();
-
 				dotScreen.uniforms[ 'scale' ].value = 1.7;
-
-
-
 				dotScreen.uniforms[ 'angle' ].value = 73;
-
-
 				var effectCopy = new THREE.ShaderPass( THREE.CopyShader );
-
 				effectCopy.renderToScreen = true;
-
 				composer = new THREE.EffectComposer( renderer );
-
 				composer.addPass( renderModel );
-
 				composer.addPass( rgbEffect );
-
 				composer.addPass( effectBloom );
 				composer.addPass( dotScreen );
-
-				//composer.addPass( dotScreen );
-
-
-			    composer.addPass( effectCopy );
-
+			        composer.addPass( effectCopy );
 
 				window.addEventListener( 'resize', onWindowResize, false );
-
 			}
 
 			function onWindowResize() {
@@ -422,13 +385,11 @@ function checkAreas()
 	{
 		// get the pixels in a note area from the blended image
 		var blendedData = blendContext.getImageData( buttons[b].x, buttons[b].y, buttons[b].w, buttons[b].h );
-
 		// calculate the average lightness of the blended data
 		var i = 0;
 		var sum = 0;
 		var countPixels = blendedData.data.length * 0.25;
 		//	var countPixels = blendedData.data.length * 0.25;
-
 		while (i < countPixels)
 		{
 			sum += (blendedData.data[i*4] + blendedData.data[i*4+1] + blendedData.data[i*4+2]);
@@ -436,20 +397,15 @@ function checkAreas()
 		}
 		// calculate an average between of the color values of the note area [0-255]
 		var average = Math.round(sum / (3 * countPixels));
-		if (average > 93) // more than 20% movement detected
-		{
-           composer.render();
-           sound1.loop(true);
-           sound1.mute(false);
-           sound1.fade(.87, 0, 678);
 
+                if (average > 93) // more than 20% movement detected
+                    composer.render();
+                    sound1.loop(true);
+                    sound1.mute(false);
+                    sound1.fade(.87, 0, 678);
 	}
     }
 }
-
-
-
 		</script>
-
 	</body>
 </html>
