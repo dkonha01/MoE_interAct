@@ -181,157 +181,129 @@ var light = new THREE.DirectionalLight( 0xffffff );
 light.position.set( 0.5, 1, 1 ).normalize();
 scene.add( light );
 
-				renderer = new THREE.WebGLRenderer( { antialias: false } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
+renderer = new THREE.WebGLRenderer( { antialias: false } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+container.appendChild( renderer.domElement );
+MoE = document.getElementById( 'movie' );
 
-				MoE = document.getElementById( 'movie' );
-
-				texture = new THREE.VideoTexture( MoE );
-				texture.minFilter = THREE.LinearFilter;
-				texture.magFilter = THREE.LinearFilter;
-				texture.format = THREE.RGBFormat;
+texture = new THREE.VideoTexture( MoE );
+texture.minFilter = THREE.LinearFilter;
+texture.magFilter = THREE.LinearFilter;
+texture.format = THREE.RGBFormat;
 
 				//////////////////////////////////////////////////////
 
-				var i, j, ux, uy, ox, oy,
-					geometry,
-					xsize, ysize;
+var i, j, ux, uy, ox, oy, geometry, xsize, ysize;
 
-				ux = 1 / xgrid;
-				uy = 1 / ygrid;
+ux = 1 / xgrid;
+uy = 1 / ygrid;
+xsize = 600/ xgrid;
+ysize = 400/ ygrid;
+var parameters = { color: 0xffffff, map: texture };
+cube_count = 0;
 
-				//xsize = 480 / xgrid;
-				//ysize = 204 / ygrid;
-
-				xsize = 600/ xgrid;
-
-				ysize = 400/ ygrid;
-
-				var parameters = { color: 0xffffff, map: texture };
-
-				cube_count = 0;
-
-				for ( i = 0; i < xgrid; i ++ )
+			for ( i = 0; i < xgrid; i ++ )
 				for ( j = 0; j < ygrid; j ++ ) {
-
 					ox = i;
 					oy = j;
 					geometry = new THREE.BoxGeometry( xsize, ysize, xsize );
 					change_uvs( geometry, ux, uy, ox, oy );
 					materials[ cube_count ] = new THREE.MeshLambertMaterial( parameters );
 					material = materials[ cube_count ];
-
 					material.hue = i/xgrid;
 					material.saturation = 1 - j/ygrid;
-
 					material.color.setHSL( 1, material.saturation, 0.73);
 					//material.color.setHSL( material.hue, material.saturation, 0.5 );
-
 					////////////////////////////////////////////////////////////////////
 
 					mesh = new THREE.Mesh( geometry, material );
-
 					mesh.position.x =   ( i - xgrid/2 ) * xsize;
 					mesh.position.y =   ( j - ygrid/2 ) * ysize;
 					mesh.position.z = 0;
 					mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
 					scene.add( mesh );
-
 				}
 
-				renderer.autoClear = false;
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+renderer.autoClear = false;
+document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				// postprocessing
 
-				var renderModel = new THREE.RenderPass( scene, camera );
-				var rgbEffect = new THREE.ShaderPass( THREE.RGBShiftShader );
-                rgbEffect.uniforms[ 'amount' ].value = 0.0183;
+var renderModel = new THREE.RenderPass( scene, camera );
+var rgbEffect = new THREE.ShaderPass( THREE.RGBShiftShader );
+rgbEffect.uniforms[ 'amount' ].value = 0.0183;
+var effectBloom = new THREE.BloomPass( 2.3 );
+var dotScreen = new THREE.DotScreenPass();
+dotScreen.uniforms[ 'scale' ].value = 1.7;
+dotScreen.uniforms[ 'angle' ].value = 73;
+var effectCopy = new THREE.ShaderPass( THREE.CopyShader );
+effectCopy.renderToScreen = true;
+composer = new THREE.EffectComposer( renderer );
+composer.addPass( renderModel );
+composer.addPass( rgbEffect );
+composer.addPass( effectBloom );
+composer.addPass( dotScreen );
+composer.addPass( effectCopy );
+window.addEventListener( 'resize', onWindowResize, false );
 
-				var effectBloom = new THREE.BloomPass( 2.3 );
-				var dotScreen = new THREE.DotScreenPass();
-				dotScreen.uniforms[ 'scale' ].value = 1.7;
-				dotScreen.uniforms[ 'angle' ].value = 73;
-				var effectCopy = new THREE.ShaderPass( THREE.CopyShader );
-				effectCopy.renderToScreen = true;
-				composer = new THREE.EffectComposer( renderer );
-				composer.addPass( renderModel );
-				composer.addPass( rgbEffect );
-				composer.addPass( effectBloom );
-				composer.addPass( dotScreen );
-			        composer.addPass( effectCopy );
+}
 
-				window.addEventListener( 'resize', onWindowResize, false );
-			}
+function onWindowResize() {
 
-			function onWindowResize() {
+windowHalfX = window.innerWidth / 2;
+windowHalfY = window.innerHeight / 2;
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize( window.innerWidth, window.innerHeight );
+composer.reset();
 
-				windowHalfX = window.innerWidth / 2;
-				windowHalfY = window.innerHeight / 2;
+}
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+function change_uvs( geometry, unitx, unity, offsetx, offsety ) {
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				composer.reset();
-
-			}
-
-			function change_uvs( geometry, unitx, unity, offsetx, offsety ) {
-
-				var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
-
-				for ( var i = 0; i < faceVertexUvs.length; i ++ ) {
-
-					var uvs = faceVertexUvs[ i ];
-
+var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
+			for ( var i = 0; i < faceVertexUvs.length; i ++ ) {
+				var uvs = faceVertexUvs[ i ];
 					for ( var j = 0; j < uvs.length; j ++ ) {
-
 						var uv = uvs[ j ];
-
 						uv.x = ( uv.x + offsetx ) * unitx;
 						uv.y = ( uv.y + offsety ) * unity;
 
 					}
-
-				}
-
 			}
+}
 
-
-			function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event) {
 
 				mouseX = ( event.clientX - windowHalfX );
 				mouseY = ( event.clientY - windowHalfY ) * 0.3;
-			}
+}
 
-			function animate() {
+function animate() {
 
 				requestAnimationFrame( animate );
 				render();
 				blend();
 				checkAreas();
 
-			}
+}
 
-			var h, counter = 1;
-			function render() {
+var h, counter = 1;
+function render() {
 
-				if ( video.readyState === video.HAVE_ENOUGH_DATA )
+			if ( video.readyState === video.HAVE_ENOUGH_DATA )
 	        {
-		// mirror video
-
+		    // mirror video
 		    videoContext.drawImage( video, 0, 0, videoCanvas.width, videoCanvas.height );
 		    for ( var i = 0; i < buttons.length; i++ )
 			    layer2Context.drawImage( buttons[i].image, buttons[i].x, buttons[i].y, buttons[i].w, buttons[i].h );
 	        }
 
 
-				renderer.clear();
-				//composer.render();
-		}
+renderer.clear();
+//composer.render();
+}
 
 var lastImageData;
 
